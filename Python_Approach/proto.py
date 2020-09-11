@@ -5,35 +5,39 @@
 
     used as a temporary canva to the full solution
 """
-from datetime import datetime, timedelta
+from tasks import Tasks
+from engine import storage
 
-fields = ['id', 'created_at', 'can_type', 'amount', 'due_to', 'status']
+fields = ['can_type', 'amount', 'due_to', 'status']
 
 
-def insert_task(new_task={}):
-    if type(new_task) != dict:
-        print("Wrong data type to be inserted")
-
-        basic_dict = {'created_at': datetime.utcnow(),
-                  'can_type': 0,
-                  'amount': 0,
-                  'due_to': datetime.utcnow() + timedelta(hours=5)}
-
-    for f in fields:
-        if f in new_task:
-            basic_dict[f] = new_task[f]
-
-    print(**basic_dict)
 
 if __name__ == '__main__':
 
-    insert = input("Enter 1 if you wnat to insert new task\n")
+    insert = input("""Enter
+    1 if you want to insert new task
+    2 if you want to list all the tasks
+    3 if you want to sort with new priorities\n""")
+
     try:
         if int(insert) == 1:
-            to_dict = {}
+            new_dict = {}
             for f in fields:
-                if f not in ['id', 'status', 'created_at']:
-                    inp = input("Enter the {} value:\n".format(f))
-                    to_dict.update({f: inp})
+                mess = "Please enter {}:\n".format(f)
+                new_dict.update({f: input(mess)})
+            new_task = Tasks(**new_dict)
+            new_task.save()
+        elif int(insert) == 2:
+            all_tasks = storage.all()
+            print("-"*110)
+            print("|                  id                  |         created_at         | can_type | amount | due_to | status |")
+            print("-"*110)
+            for key, a_task in all_tasks.items():
+                m = "| {id} | {created_at} |     {can_type}    |   {amount}  |    {due_to}    | {status} |"
+                print(m.format(**a_task.__dict__))
+            print("-"*110)
+        elif int(insert) == 3:
+            pass
+
     except Exception as error:
         print(error)
