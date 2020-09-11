@@ -8,12 +8,25 @@
 from tasks import Tasks
 from engine import storage
 
+from random import randint
+
+
 fields = ['can_type', 'amount', 'due_to', 'status']
 
 
 
 if __name__ == '__main__':
 
+    '''
+    for i in range(5000):
+        stat = ['pending', 'in_process', 'delayed']
+        new_dict = {'can_type': str(randint(1, 4)),
+                    'amount': str(randint(1, 200)),
+                    'due_to': str(randint(10, 200)),
+                    'status': stat[randint(0,2)]}
+        new_task = Tasks(**new_dict)
+        new_task.save()
+    '''
     insert = input("""Enter
     1 if you want to insert new task
     2 if you want to list all the tasks
