@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from datetime import datetime
 
 fields = ['can_type', 'amount', 'due_to', 'status']
-int_list = ['can_type', 'amount']
+int_list = ['can_type', 'amount', 'due_to']
 
 
 class Tasks:
@@ -22,15 +22,16 @@ class Tasks:
     due_to = ""
     status = ""
 
+
     def __init__(self, *args, **kwargs):
         """ Instantiates a new Task """
         if not kwargs:
             print("No arguments to create this Task")
             return
         if 'created_at' in kwargs:
-            del kwargs['created_at']
-        if 'id' in kwargs:
-            del kwargs['id']
+            kwargs['created_at']\
+                    = datetime.strptime(kwargs['created_at'],
+                                        '%Y-%m-%dT%H:%M:%S.%f')
 
         for attri in fields:
             if attri not in kwargs:

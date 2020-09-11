@@ -3,8 +3,7 @@
 
 """ file_storage module """
 import json
-
-
+import time
 
 class FileStorage:
 
@@ -12,21 +11,29 @@ class FileStorage:
 
     __file_path = 'file.json'
     __tasks = {}
-    __order = []
-    __priorities = [1, 3, 5]
+    order = []
+    priorities = {'can_type': 1, 'amount': 3, 'due_to': 5}
 
     def all(self):
         """ Retrieves all of the task in storage """
         return self.__tasks
 
-    def order(self):
+    def order_tasks(self):
         """ Orders list by priorities """
         """ Ponderates each task """
-        temp_res = []
-        for idx, t_id in enumerate(self.__order):
-            temp_res.append(max([score for field in self.__tasks[task] if ]))
+        temp = self.order.copy()
+        for o_task in self.order:
+            a_task = self.__tasks[o_task[0]]
+            max_score = max([value*self.priorities[key] \
+                             for key, value in a_task.to_dict().items() \
+                             if key in self.priorities])
+            o_task[1] = max_score
+
         """ Tim Sort """
-        
+        print("---- Tim Sort ----")
+        start = time.time()
+        self.order.sort(key=lambda t: t[1])
+        print("--- {} seconds ---".format(time.time() - start))
 
 
     def reload(self):
@@ -39,7 +46,7 @@ class FileStorage:
                 for key, val in temp.items():
                     n_t = Tasks(**val)
                     self.all()[key] = n_t
-                    self.__order.append(n_t.id)
+                    self.order.append([n_t.id, 0])
         except Exception as error:
             print(error)
             return
